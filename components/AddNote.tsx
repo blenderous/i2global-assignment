@@ -14,7 +14,6 @@ import {
 } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { revalidatePath } from "next/cache";
 
 export default function AddNote() {
   const [open, setOpen] = useState(false);
@@ -63,7 +62,6 @@ export default function AddNote() {
                   })
                   .then(function (data) {
                     console.log(data);
-                    revalidatePath("/notes");
                     setOpen(false);
                   });
                 event.preventDefault();
