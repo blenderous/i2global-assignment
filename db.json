@@ -1,6 +1,14 @@
 {
-"notes": [
-    { "id": "1", "title": "Segregate waste", "content": "Waste should be segregated into two bins, one for biodegradable and one for non-biodegradable waste." },
-    { "id": "2", "title": "Reuse containers", "content": "Containers can be reused instead of getting things in a single-use plastic bag" }
+  "notes": [
+    {
+      "id": "1",
+      "title": "Segregate waste",
+      "content": "Waste should be segregated into two bins, one for biodegradable and one for non-biodegradable waste."
+    },
+    {
+      "id": "2",
+      "title": "Reuse containers",
+      "content": "Containers can be reused instead of getting things in a single-use plastic bag"
+    }
   ]
 }
