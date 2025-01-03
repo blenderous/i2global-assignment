@@ -1,4 +1,5 @@
 import AddNote from "@/components/AddNote";
+import { EditeNote } from "@/components/EditNote";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,8 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Note } from "@/lib/types";
-import { PlusIcon } from "lucide-react";
+import { type Note } from "@/lib/types";
+import { PencilIcon, TrashIcon } from "@heroicons/react/16/solid";
 
 export default async function Notes() {
   const notes = await fetch("http://localhost:4000/notes").then((res) =>
@@ -21,17 +22,7 @@ export default async function Notes() {
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         {notes.map((note: Note) => (
           <li key={note.id}>
-            <Card>
-              <CardHeader>
-                <CardTitle>{note.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{note.content}</p>
-              </CardContent>
-              {/* <CardFooter>
-                <p>Last modified: </p>
-              </CardFooter> */}
-            </Card>
+            <Note id={note.id} title={note.title} content={note.content} />
           </li>
         ))}
         <li>
@@ -39,5 +30,27 @@ export default async function Notes() {
         </li>
       </ul>
     </div>
+  );
+}
+
+function Note({ id, title, content }: Note) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p>{content}</p>
+      </CardContent>
+      <CardFooter>
+        <div className="w-full flex items-center justify-end gap-2">
+          <EditeNote id={id} title={title} content={content} />
+          <Button>
+            <span className="sr-only">Delete</span>
+            <TrashIcon />
+          </Button>
+        </div>
+      </CardFooter>
+    </Card>
   );
 }

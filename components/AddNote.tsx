@@ -1,35 +1,42 @@
 "use client";
 
-import * as Dialog from "@radix-ui/react-dialog";
+// import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { PlusIcon } from "@heroicons/react/16/solid";
 
 import { Button } from "./ui/button";
 import {
+  Dialog,
+  DialogContent,
   DialogDescription,
   // DialogFooter,
   DialogHeader,
+  DialogOverlay,
+  DialogPortal,
   DialogTitle,
+  DialogTrigger,
 } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { useRouter } from "next/navigation";
 
 export default function AddNote() {
   const [open, setOpen] = useState(false);
   return (
     <div className="p-4">
-      <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger>
           <span className="sr-only">Add a new note</span>
           <PlusIcon
             className="text-cyan-600"
             style={{ width: "6rem", height: "6rem" }}
           />
-        </Dialog.Trigger>
-        <Dialog.Portal>
-          <Dialog.Overlay />
-          <Dialog.Content>
+        </DialogTrigger>
+        <DialogPortal>
+          <DialogOverlay />
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>Create a new note</DialogTitle>
               <DialogDescription>
@@ -37,49 +44,70 @@ export default function AddNote() {
                 are done.
               </DialogDescription>
             </DialogHeader>
-
-            <form
-              onSubmit={(event) => {
-                var payload = {
-                  id: "3",
-                  title: "Carry a water bottle",
-                  content: "Avoid buying water in plastic bottles.",
-                };
-
-                // var data = new FormData();
-                // data.append("json", JSON.stringify(payload));
-
-                fetch("http://localhost:4000/notes", {
-                  method: "POST",
-                  headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(payload),
-                })
-                  .then(function (res) {
-                    return res.json();
-                  })
-                  .then(function (data) {
-                    console.log(data);
-                    setOpen(false);
-                  });
-                event.preventDefault();
-              }}
-            >
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input id="title" type="text" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="content">Content</Label>
-                <Input id="content" type="text" />
-              </div>
-              <Button type="submit">Submit</Button>
-            </form>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+            {/* Add Note Form */}
+            <AddNoteForm setOpen={setOpen} />
+          </DialogContent>
+        </DialogPortal>
+      </Dialog>
     </div>
+  );
+}
+
+function AddNoteForm({ setOpen }: { setOpen: (open: boolean) => void }) {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const router = useRouter();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    var payload = {
+      id: uuidv4(),
+      title: title,
+      content: content,
+    };
+
+    try {
+      fetch("http://localhost:4000/notes", {
+        method: "POST",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) {
+          return res.json();
+        })
+        .then(function (data) {
+          console.log(data);
+          setOpen(false);
+        });
+    } catch (error) {
+      console.error((error as Error).message);
+    }
+    event.preventDefault();
+    router.refresh();
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-4">
+        <Label htmlFor="title">Title</Label>
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          id="title"
+          type="text"
+        />
+      </div>
+      <div className="mb-4">
+        <Label htmlFor="content">Content</Label>
+        <Input
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          id="content"
+          type="text"
+        />
+      </div>
+      <Button type="submit">Submit</Button>
+    </form>
   );
 }
