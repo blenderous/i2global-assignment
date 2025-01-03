@@ -1,4 +1,5 @@
 import AddNote from "@/components/AddNote";
+import { DeleteNote } from "@/components/DeleteNote";
 import { EditeNote } from "@/components/EditNote";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,10 +46,7 @@ function Note({ id, title, content }: Note) {
       <CardFooter>
         <div className="w-full flex items-center justify-end gap-2">
           <EditeNote id={id} title={title} content={content} />
-          <Button>
-            <span className="sr-only">Delete</span>
-            <TrashIcon />
-          </Button>
+          <DeleteNote id={id} />
         </div>
       </CardFooter>
     </Card>

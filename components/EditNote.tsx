@@ -23,7 +23,7 @@ export function EditeNote({ id, title, content }: Note) {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <span className="inline-block w-10 h-10 p-2 rounded-md bg-cyan-500 text-white">
+          <span className="block w-10 h-10 p-2 rounded-md bg-cyan-500 hover:bg-cyan-600 text-white">
             <span className="sr-only">Edit</span>
             <PencilIcon />
           </span>
